@@ -9,12 +9,12 @@
 
 // void ft_bzero(void* addr, long unsigned len);
 
-//size_t		ft_strlen(char *str);
+size_t		ft_strlen(char *str);
 char		*ft_strcpy(char *dst, char *src);
-// int			ft_strcmp(char *s1, char *s2);
-// ssize_t		ft_write(int fd, const void *buf, size_t nbyte);
-// ssize_t		ft_read(int fd, void *buf, size_t nbyte);
-// char		*ft_strdup(char *str);
+int			ft_strcmp(char *s1, char *s2);
+ssize_t		ft_write(int fd, const void *buf, size_t nbyte);
+ssize_t		ft_read(int fd, void *buf, size_t nbyte);
+char		*ft_strdup(char *str);
 
 // int main()
 // {
@@ -153,15 +153,15 @@ int			main(void)
 	/* 
 	//  * strdup 
 	//  */
-	// printf("\n|M| ==> string by ft_strdup is |%s|\n", ft_strdup(s));
-	// printf("errno = |%d|\n", errno);
-	// printf("|O| ==> string by    strdup is |%s|\n",  strdup(s));
-	// printf("errno = |%d|\n", errno);
+	/* printf("|M| ==> string by ft_strdup is |%s|\n", ft_strdup("NULL"));
+	printf("errno = |%d|\n", errno);
+	printf("|O| ==> string by    strdup is |%s|\n",  strdup("NULL"));
+	printf("errno = |%d|\n", errno); */
 	// /* 
 	//  * strlen 
 	//  */
- 	// printf("\n|M| ==> Return value by ft_strlen = |%zu|\n", ft_strlen(s));
-	// printf("|O| ==> Return value by    strlen = |%zu|\n\n", strlen(s)); 
+ 	//printf("|M| ==> Return value by ft_strlen = |%zu|\n", ft_strlen(s));
+	//printf("|O| ==> Return value by    strlen = |%zu|\n", strlen(s)); 
 	//printf("%zu\n", ft_strlen(NULL));
 	// printf("mine == %zu\n", ft_strlen("NULL"));
 	// printf("origin == %zu\n", strlen("NULL"));
@@ -176,20 +176,71 @@ int			main(void)
 	//printf("%s|\n", ft_strcpy(dest, "hello"));
 	//printf("mine = %s|\n", ft_strcpy(dest, "hello"));
 	//printf("origin = %s|\n", strcpy(dest, "hello"));
-	printf("%s|\n", ft_strcpy(dest, NULL));
+	//printf("%s|\n", ft_strcpy(dest, NULL));
 	//printf("%s|\n", ft_strcpy(NULL, "hello"));
 	// /* 
 	//  * strcmp 
 	//  */
-	// printf("|M| ==> the return value of ft_strcmp is |%d|\n", ft_strcmp("", "hello"));
-	// printf("|O| ==> the return value of    strcmp is |%d|\n\n", strcmp("", "hello"));
-	// printf("|M| ==> the return value of ft_strcmp is |%d|\n", ft_strcmp("hello", "hello"));
-	// printf("|O| ==> the return value of    strcmp is |%d|\n\n", strcmp("hello", "hello"));
-	// printf("|M| ==> the return value of ft_strcmp is |%d|\n", ft_strcmp("hello", "helloa"));
-	// printf("|O| ==> the return value of    strcmp is |%d|\n\n", strcmp("hello", "helloa"));
-	// printf("|M| ==> the return value of ft_strcmp is |%d|\n", ft_strcmp("helloa", "hello"));
-	// printf("|O| ==> the return value of    strcmp is |%d|\n\n", strcmp("helloa", "hello"));
-	// printf("|M| ==> the return value of ft_strcmp is |%d|\n", ft_strcmp("hella", "hello"));
-	// printf("|O| ==> the return value of    strcmp is |%d|\n\n", strcmp("hella", "hello"));
+	printf("|M| ==> the return value of ft_strcmp is |%d|\n", ft_strcmp("", "hello"));
+	printf("|O| ==> the return value of    strcmp is |%d|\n\n", strcmp("", "hello"));
+	printf("|M| ==> the return value of ft_strcmp is |%d|\n", ft_strcmp("h", "h"));
+	printf("|O| ==> the return value of    strcmp is |%d|\n\n", strcmp("h", "h"));
+	printf("|M| ==> the return value of ft_strcmp is |%d|\n", ft_strcmp("hello", "helloa"));
+	printf("|O| ==> the return value of    strcmp is |%d|\n\n", strcmp("hello", "helloa"));
+	printf("|M| ==> the return value of ft_strcmp is |%d|\n", ft_strcmp("helloa", "hello"));
+	printf("|O| ==> the return value of    strcmp is |%d|\n\n", strcmp("helloa", "hello"));
+	printf("|M| ==> the return value of ft_strcmp is |%d|\n", ft_strcmp("hella", "hello"));
+	printf("|O| ==> the return value of    strcmp is |%d|\n\n", strcmp("hella", "hello"));
 	return (0);
 }
+
+/* ft_strdup:
+        call            ft_strlen
+        mov             r8, rax
+        add             r8, 1
+        call            malloc
+        jmp             dup
+
+increment:
+       inc             rcx
+
+dup:
+       xor             rcx, rcx
+       mov             dl, byte[rdi + rcx]
+       mov             byte[rax + rcx], dl
+       cmp             byte[rdi + rcx], 0
+       jne             increment
+
+return:
+       mov             [rax], qword rdi 
+       ret */
+
+/* ft_strcmp:
+        mov             rcx, -1
+
+ft_strcmp_do:
+        ;xor             rax, rax
+        inc             rcx
+        ;xor             rcx, rcx
+        mov             dl, byte[rdi + rcx]
+        mov             dh, byte[rsi + rcx]
+        cmp             dl, 0
+        je              ft_strcmp_end0
+        cmp             dl, dh
+        je              ft_strcmp_do
+        jl              ft_strcmp_l
+        jg              ft_strcmp_g
+
+ft_strcmp_end0:
+        cmp             dh, 0
+        jne             ft_strcmp_l
+        xor             rax, rax
+        ret
+
+ft_strcmp_l:
+        mov             rax, -1
+        ret
+
+ft_strcmp_g:
+        mov             rax, 1
+        ret */
