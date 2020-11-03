@@ -7,25 +7,22 @@ SRC = ft_write.s \
 	  ft_strdup.s \
 	  ft_strcmp.s
 
+SRC_BONUS = ft_list_size.s
+
 OBJ = $(SRC:.s=.o)
 
-#SRC_BONUS = ft_atoi_base.s \
-#			 ft_list_push_front.s \
-#			 ft_list_size.s \
-#			 ft_list_sort.s \
-#			 ft_list_remove_if.s
 
-#OBJ_BONUS = $(SRC_BONUS:.s=.o)
+OBJ_BONUS = $(SRC_BONUS:.s=.o)
 
-FLAGS = -f macho64
+FLAGS = -f elf64
 
 NM = nasm
 
 all: $(NAME)
 
-#bonus: $(OBJ_BONUS) $(OBJ)
-#		@ar rcs $(NAME) $(OBJ_BONUS) $(OBJ)
-#		@echo 'SUCCESS'
+bonus: $(OBJ_BONUS) $(OBJ)
+		@ar rcs $(NAME) $(OBJ_BONUS) $(OBJ)
+		@echo 'SUCCESS'
 
 $(NAME): $(OBJ)
 		@ar rcs $(NAME) $(OBJ)
@@ -36,7 +33,7 @@ $(NAME): $(OBJ)
 
 clean:
 		@rm -rf $(OBJ)
-# 		@rm -rf $(OBJ_BONUS)
+		@rm -rf $(OBJ_BONUS)
 		@echo 'CLEAN'
 
 fclean: clean

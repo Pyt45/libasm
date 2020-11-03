@@ -12,6 +12,41 @@ typedef struct 		s_list
 }					t_list;
 
 
+int		ft_isspace(int c)
+{
+	return (c == ' ' || c == '\t' || c == '\v'
+	|| c == '\n' || c == '\f' || c == '\r');
+}
+
+int		find_char_base(char *base, char c)
+{
+	int		i;
+
+	i = 0;
+	while (base[i] && base[i] != c)
+		i++;
+	return (i);
+}
+
+int		ft_atoi_base1(char *str, char *base)
+{
+	int		base_len;
+	int		num;
+	int		sign;
+
+	num = 0;
+	base_len = strlen(base);
+	if (base_len < 2)
+		return (0);
+	sign = (*str == '-') ? 1 : 0;
+	str += (str[0] == '+' || str[0] == '-') ? 1 : 0;
+	while (ft_isspace(*str))
+		str++;
+	while (find_char_base(base, *str) < base_len)
+		num = (num * base_len) - find_char_base(base, *str++);
+	return (sign ? num : -num);
+}
+
 t_list		*ft_new_list(void	*data)
 {
 	t_list	*list;
@@ -23,7 +58,7 @@ t_list		*ft_new_list(void	*data)
 	return (list);
 }
 
-void		ft_list_push_front(t_list **begin_list, void *data)
+void		ft_list_push_front1(t_list **begin_list, void *data)
 {
 	t_list	*list;
 
@@ -50,7 +85,7 @@ void	print_list(t_list *list)
 	}
 }
 
-int		ft_list_size(t_list *begin_list)
+int		ft_list_size1(t_list *begin_list)
 {
 	int		len;
 	t_list	*tmp;
@@ -65,7 +100,7 @@ int		ft_list_size(t_list *begin_list)
 	return (len);
 }
 
-void ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)())
+void ft_list_remove_if1(t_list **begin_list, void *data_ref, int (*cmp)())
 {
 	t_list	*tmp;
 	t_list	*current;
@@ -94,7 +129,7 @@ void ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)())
 	}
 }
 
-void	ft_list_sort(t_list **begin_list, int (*cmp)())
+void	ft_list_sort1(t_list **begin_list, int (*cmp)())
 {
 	t_list	*tmp;
 	t_list	*head;
@@ -129,28 +164,72 @@ ssize_t		ft_write(int fd, const void *buf, size_t nbyte);
 ssize_t		ft_read(int fd, void *buf, size_t nbyte);
 char		*ft_strdup(char *str);
 // void		ft_list_push_front(t_list **begin_list, void *data);
-// int		ft_list_size(t_list *begin_list);
-// void ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
-// void	ft_list_sort(t_list **begin_list, int (*cmp)());
+int		ft_list_size(t_list *begin_list);
+// void 	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
+// void		ft_list_sort(t_list **begin_list, int (*cmp)());
+// int		ft_atoi_base(char *str, char *base);
 
+/* int		check_base(char c, char *base)
+{
+	int		i;
+
+	i = 0;
+	while(base[i])
+	{
+		if (base[i] == c)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+int		ft_atoi_base(char *str, char *base)
+{
+	int		n;
+	int		sign;
+	int		i;
+	int		index;
+	int		base_len;
+
+	base_len = 0;
+	i = 0;
+	index = 0;
+	sign = 1;
+	while (base[base_len])
+		base_len++;
+	if (str[0] == '-')
+	{
+		sign = -1;
+		str++;
+	}
+	while (str[i])
+	{
+		index = check_base(str[i], base);
+		if (index >= 0)
+			n = (n * base_len) + index;
+		i++;
+	}
+	return (n * sign);
+} */
 
 int main()
 {
 	t_list	*list;
 
 	list = NULL;
-	ft_list_push_front(&list, strdup("d"));
-	ft_list_push_front(&list, strdup("a"));
-	ft_list_push_front(&list, strdup("c"));
-	ft_list_push_front(&list, strdup("b"));
-	print_list(list);
-	ft_list_remove_if(&list, strdup("a"), strcmp);
-	puts("\n=============\n");
-	print_list(list);
+	ft_list_push_front1(&list, strdup("d"));
+	ft_list_push_front1(&list, strdup("a"));
+	ft_list_push_front1(&list, strdup("c"));
+	ft_list_push_front1(&list, strdup("b"));
+	ft_list_push_front1(&list, strdup("e"));
+	int lst_len1 = ft_list_size1(list);
+	printf("orig == %d\n", lst_len1);
+	int lst_len = ft_list_size(list);
+	printf("mine == %d\n", lst_len);
 	//}
+
 	// char	*str;
 	// char	dest[10];
-
 	// str = malloc(sizeof(char) * 5);
 	//printf("%d\n", ft_strlen(NULL));
 	// printf("mine == %zu\n", ft_strlen("NULL"));
@@ -399,3 +478,25 @@ ft_strcmp_l:
 ft_strcmp_g:
         mov             rax, 1
         ret */
+
+
+/* algo of ft_list_size
+ft_list_size:
+		xor				rcx, rcx
+		cmp				rdi, byte 0
+		je				end ; 0
+		inc				rcx
+		; ===== next =====
+		mov				rdi, [rdi + 8]
+		cmp				rdi, byte 0
+		je				end ; 1
+		inc				rcx
+		; ===== next =====
+
+		mov				rdi, [rdi + 8]
+		cmp				rdi, byte 0
+		je				end ; 2
+		inc				rcx
+end:
+		mov				rax, rcx ; 3
+		ret */
