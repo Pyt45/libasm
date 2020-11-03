@@ -163,7 +163,7 @@ int			ft_strcmp(char *s1, char *s2);
 ssize_t		ft_write(int fd, const void *buf, size_t nbyte);
 ssize_t		ft_read(int fd, void *buf, size_t nbyte);
 char		*ft_strdup(char *str);
-// void		ft_list_push_front(t_list **begin_list, void *data);
+void		ft_list_push_front(t_list **begin_list, void *data);
 int		ft_list_size(t_list *begin_list);
 // void 	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
 // void		ft_list_sort(t_list **begin_list, int (*cmp)());
@@ -215,17 +215,21 @@ int		ft_atoi_base(char *str, char *base)
 int main()
 {
 	t_list	*list;
+	t_list	*list1;
 
 	list = NULL;
-	ft_list_push_front1(&list, strdup("d"));
-	ft_list_push_front1(&list, strdup("a"));
-	ft_list_push_front1(&list, strdup("c"));
+	list1 = NULL;
+	ft_list_push_front1(&list1, strdup("d"));
+	print_list(list1);
+	ft_list_push_front(&list, strdup("d"));
+	print_list(list);
+	/* ft_list_push_front1(&list, strdup("c"));
 	ft_list_push_front1(&list, strdup("b"));
-	ft_list_push_front1(&list, strdup("e"));
-	int lst_len1 = ft_list_size1(list);
+	ft_list_push_front1(&list, strdup("e"))*/;
+	/* int lst_len1 = ft_list_size1(list);
 	printf("orig == %d\n", lst_len1);
 	int lst_len = ft_list_size(list);
-	printf("mine == %d\n", lst_len);
+	printf("mine == %d\n", lst_len); */
 	//}
 
 	// char	*str;
