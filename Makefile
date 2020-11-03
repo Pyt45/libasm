@@ -17,7 +17,7 @@ OBJ = $(SRC:.s=.o)
 
 #OBJ_BONUS = $(SRC_BONUS:.s=.o)
 
-FLAGS = -f elf64
+FLAGS = -f macho64
 
 NM = nasm
 
@@ -36,7 +36,7 @@ $(NAME): $(OBJ)
 
 clean:
 		@rm -rf $(OBJ)
-		#@rm -rf $(OBJ_BONUS)
+# 		@rm -rf $(OBJ_BONUS)
 		@echo 'CLEAN'
 
 fclean: clean

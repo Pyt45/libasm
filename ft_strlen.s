@@ -1,7 +1,7 @@
-        global      ft_strlen
+        global      _ft_strlen
         section     .text
 
-ft_strlen:
+_ft_strlen:
         mov         rax, -1
         jmp         ft_strlen_loop
 
