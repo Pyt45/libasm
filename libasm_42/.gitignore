@@ -1,0 +1,5 @@
+.vscode
+.DS_Store
+*.o
+libasm.a
+a.out
