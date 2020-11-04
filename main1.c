@@ -47,7 +47,7 @@ int		ft_atoi_base1(char *str, char *base)
 	return (sign ? num : -num);
 }
 
-t_list		*ft_new_list(void	*data)
+t_list		*ft_new_list1(void	*data)
 {
 	t_list	*list;
 
@@ -63,10 +63,10 @@ void		ft_list_push_front1(t_list **begin_list, void *data)
 	t_list	*list;
 
 	if ((*begin_list) == NULL)
-		*begin_list = ft_new_list(data);
+		*begin_list = ft_new_list1(data);
 	else
 	{
-		list = ft_new_list(data);
+		list = ft_new_list1(data);
 		list->next = *begin_list;
 		*begin_list = list;
 	}
@@ -155,16 +155,17 @@ void	ft_list_sort1(t_list **begin_list, int (*cmp)())
 
 // void ft_bzero(void* addr, long unsigned len);
 
-int			test(char *str);
+// int			test(char *str);
 
-size_t		ft_strlen(char *str);
-char		*ft_strcpy(char *dst, char *src);
-int			ft_strcmp(char *s1, char *s2);
-ssize_t		ft_write(int fd, const void *buf, size_t nbyte);
-ssize_t		ft_read(int fd, void *buf, size_t nbyte);
-char		*ft_strdup(char *str);
+// size_t		ft_strlen(char *str);
+// char		*ft_strcpy(char *dst, char *src);
+// int			ft_strcmp(char *s1, char *s2);
+// ssize_t		ft_write(int fd, const void *buf, size_t nbyte);
+// ssize_t		ft_read(int fd, void *buf, size_t nbyte);
+// char		*ft_strdup(char *str);
 void		ft_list_push_front(t_list **begin_list, void *data);
-int		ft_list_size(t_list *begin_list);
+int			ft_list_size(t_list *begin_list);
+t_list		*ft_new_list(void	*data);
 // void 	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
 // void		ft_list_sort(t_list **begin_list, int (*cmp)());
 // int		ft_atoi_base(char *str, char *base);
@@ -216,13 +217,21 @@ int main()
 {
 	t_list	*list;
 	t_list	*list1;
+	//printf("%lu\n", sizeof(t_list));
 
 	list = NULL;
 	list1 = NULL;
-	ft_list_push_front1(&list1, strdup("d"));
+	// list = ft_new_list1(strdup("AQLZIM"));
+	//list1 = ft_new_list(strdup("AYOUB"));
+	// list->next = ft_new_list1("AQLZIM1");
+	// list1->next = ft_new_list("AYOUB1");
+	//ft_list_push_front1(&list, strdup("A"));
+	ft_list_push_front(&list1, strdup("B"));
+	//print_list(list);
 	print_list(list1);
-	ft_list_push_front(&list, strdup("d"));
-	print_list(list);
+	// ft_list_push_front1(&list1, strdup("d"));
+	// ft_list_push_front(&list, strdup("d"));
+	// print_list(list);
 	/* ft_list_push_front1(&list, strdup("c"));
 	ft_list_push_front1(&list, strdup("b"));
 	ft_list_push_front1(&list, strdup("e"))*/;
