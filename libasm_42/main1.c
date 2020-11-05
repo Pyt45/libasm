@@ -129,12 +129,29 @@ void ft_list_remove_if1(t_list **begin_list, void *data_ref, int (*cmp)())
 	}
 }
 
+// void ft_bzero(void* addr, long unsigned len);
+
+int			test(char *str);
+
+size_t		ft_strlen(char *str);
+char		*ft_strcpy(char *dst, char *src);
+int			ft_strcmp(char *s1, char *s2);ssize_t		ft_write(int fd, const void *buf, size_t nbyte);
+ssize_t		ft_read(int fd, void *buf, size_t nbyte);
+char		*ft_strdup(char *str);
+void		ft_list_push_front(t_list **begin_list, void *data);
+int			ft_list_size(t_list *begin_list);
+// void 	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
+void		ft_list_sort2(t_list **begin_list, int (*cmp)());
+
+
 void	ft_list_sort1(t_list **begin_list, int (*cmp)())
 {
 	t_list	*tmp;
 	t_list	*head;
 	void	*data_sort;
 
+	if (!cmp)
+		return ;
 	head = *begin_list;
 	while (head)
 	{
@@ -153,20 +170,6 @@ void	ft_list_sort1(t_list **begin_list, int (*cmp)())
 	}
 }
 
-// void ft_bzero(void* addr, long unsigned len);
-
-int			test(char *str);
-
-size_t		ft_strlen(char *str);
-char		*ft_strcpy(char *dst, char *src);
-int			ft_strcmp(char *s1, char *s2);
-ssize_t		ft_write(int fd, const void *buf, size_t nbyte);
-ssize_t		ft_read(int fd, void *buf, size_t nbyte);
-char		*ft_strdup(char *str);
-void		ft_list_push_front(t_list **begin_list, void *data);
-int			ft_list_size(t_list *begin_list);
-// void 	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
-// void		ft_list_sort(t_list **begin_list, int (*cmp)());
 // int		ft_atoi_base(char *str, char *base);
 
 /* int		check_base(char c, char *base)
@@ -219,17 +222,31 @@ int main()
 
 	list = NULL;
 	list1 = NULL;
-	list1 = ft_new_list(strdup("a"));
-	ft_list_push_front1(&list1, strdup("d"));
-	ft_list_push_front1(&list1, strdup("c"));
-	ft_list_push_front1(&list1, strdup("e"));
+	// ==================== sorting  ========================
+	list = ft_new_list(strdup("e"));
+	list->next = ft_new_list(strdup("d"));
+	list->next->next = ft_new_list(strdup("c"));
+	list->next->next->next = ft_new_list(strdup("b"));
+	list->next->next->next->next = ft_new_list(strdup("a"));
+	//print_list(list);
+	//ft_list_sort2(&list1, strcmp);
+	ft_list_sort1(&list1, strcmp);
+	printf("\n=================\n\n");
 	print_list(list1);
-	printf("\n=================================\n\n");
-	list = ft_new_list(strdup("a"));
-	ft_list_push_front(&list, strdup("d"));
-	ft_list_push_front(&list, strdup("c"));
-	ft_list_push_front(&list, strdup("e"));
-	print_list(list); 
+
+
+	// ==================== add back ========================
+	// list1 = ft_new_list(strdup("a"));
+	// ft_list_push_front1(&list1, strdup("d"));
+	// ft_list_push_front1(&list1, strdup("c"));
+	// ft_list_push_front1(&list1, strdup("e"));
+	// print_list(list1);
+	// printf("\n=================================\n\n");
+	// list = ft_new_list(strdup("a"));
+	// ft_list_push_front(&list, strdup("d"));
+	// ft_list_push_front(&list, strdup("c"));
+	// ft_list_push_front(&list, strdup("e"));
+	// print_list(list); 
 	/* ft_list_push_front1(&list, strdup("c"));
 	ft_list_push_front1(&list, strdup("b"));
 	ft_list_push_front1(&list, strdup("e"))*/;
@@ -513,62 +530,6 @@ end:
 		ret */
 
 
-/* 			section	.text
-			global	_ft_list_sort
-
-; delete RCX, R8 and RAX
-
-_ft_list_sort:							; rdi = t_list **begin, rsi = int (*cmp)(d1, d2)
-			push	rbx					; save rbx (next)
-			push	r12					; save r12 (first)
-			cmp		rdi, 0				; begin == NULL
-			jz		restore
-			mov		r12, [rdi]			; first = *begin
-			cmp		rsi, 0				; cmp == NULL
-			jz		return
-			jmp		compare_main
-increment_main:
-			mov		rcx, [rdi]
-			mov		rbx, [rcx + 8]
-			mov		[rdi], rbx			; *begin = (*begin)->next
-compare_main:
-			cmp		QWORD [rdi], 0		; !*begin
-			jz		return
-			mov		rcx, [rdi]
-			mov		rbx, [rcx + 8]		; current = (*begin)->next
-compare_single:
-			cmp		rbx, 0				; !current
-			jz		increment_main
-compare:
-			push	rdi
-			push	rsi
-			mov		rax, rsi
-			mov		rcx, [rdi]
-			mov		rdi, [rcx]			; rdi = (*begin)->data
-			mov		rsi, [rbx]			; rsi = current->data
-			call	rax					; (*cmp)((*begin)->data, current->data)
-			pop		rsi
-			pop		rdi
-			cmp		rax, 0				; cmp > 0
-			jg		swap
-increment_single:
-			mov		rcx, [rbx + 8]
-			mov		rbx, rcx			; current = current.next
-			jmp		compare_single
-swap:
-			mov		r8, [rdi]
-			mov		rcx, [r8]			; rcx = (*begin)->data
-			mov		rax, [rbx]			; rax = current->data
-			mov		[r8], rax			; (*begin)->data = current->data
-			mov		[rbx], rcx			; current->data = (*begin)->data
-			jmp		increment_single
-return:
-			mov		[rdi], r12			; *begin = first
-restore:
-			pop		r12					; restore r12
-			pop		rbx					; restore rbx
-			ret */
-
 
 /* 			section	.text
 			global	_ft_list_remove_if
@@ -849,55 +810,7 @@ FT_LIST_REMOVE_IF_END:
 	mov  rsp, rbp
 	pop  rbp
 	ret */
- /*            global          _ft_list_sort
-            section         .text
 
-_ft_list_sort:
-            mov     rcx, 1
-_loop_changed:
-            cmp     rcx, 0
-            je      _end_loop_changed
-            mov     rcx, 0
-            mov     r9, [rdi]
-            call    _loop_list
-            jmp     _loop_changed
-
-_end_loop_changed:
-            ret
-
-
-_loop_list:
-            cmp     r9, byte 0
-            je      _end_loop_list
-            mov     r8, [r9+8]
-            cmp     r8, byte 0
-            je      _end_loop_list
-            mov     rdx, rsi
-            push    rdi
-            push    rsi
-            mov     rdi, [r9]
-            mov     rsi, [r8]
-            sub     rsp, 40
-            call    rdx
-            add     rsp, 40
-            pop     rsi
-            pop     rdi
-            cmp     rax, 127 
-            jl      _swap_data
-            mov     r9, [r9+8]
-            jmp     _loop_list
-
-_swap_data:
-            mov     rdx, [r9]
-            mov     rbx, [r8]
-            mov     [r9], rbx
-            mov     [r8], rdx
-            mov     rcx, 1
-            mov     r9, [r9+8]
-            jmp     _loop_list
-
-_end_loop_list:
-            ret */
 /* 
             global      _ft_list_remove_if
             extern      _free
@@ -988,3 +901,54 @@ _loop_list:
 
 _end_loop_list:
             ret */
+
+
+// ;             global          _ft_list_sort
+// ;             section         .text
+
+// ; _ft_list_sort:
+// ;             mov     rcx, 1
+// ; _loop_changed:
+// ;             cmp     rcx, 0
+// ;             je      _end_loop_changed
+// ;             mov     rcx, 0
+// ;             mov     r9, [rdi]
+// ;             call    _loop_list
+// ;             jmp     _loop_changed
+
+// ; _end_loop_changed:
+// ;             ret
+
+
+// ; _loop_list:
+// ;             cmp     r9, byte 0
+// ;             je      _end_loop_list
+// ;             mov     r8, [r9+8]
+// ;             cmp     r8, byte 0
+// ;             je      _end_loop_list
+// ;             mov     rdx, rsi
+// ;             push    rdi
+// ;             push    rsi
+// ;             mov     rdi, [r9]
+// ;             mov     rsi, [r8]
+// ;             sub     rsp, 40
+// ;             call    rdx
+// ;             add     rsp, 40
+// ;             pop     rsi
+// ;             pop     rdi
+// ;             cmp     rax, 127 
+// ;             jl      _swap_data
+// ;             mov     r9, [r9+8]
+// ;             jmp     _loop_list
+
+// ; _swap_data:
+// ;             mov     rdx, [r9]
+// ;             mov     rbx, [r8]
+// ;             mov     [r9], rbx
+// ;             mov     [r8], rdx
+// ;             mov     rcx, 1
+// ;             mov     r9, [r9+8]
+// ;             jmp     _loop_list
+
+// ; _end_loop_list:
+// ;             ret 
