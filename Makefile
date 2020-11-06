@@ -9,14 +9,15 @@ SRC = ft_write.s \
 
 SRC_BONUS = ft_list_size.s \
 			ft_new_list.s \
-			ft_list_push_front.s 
+			ft_list_push_front.s \
+			ft_list_remove_if.s
 
 OBJ = $(SRC:.s=.o)
 
 
 OBJ_BONUS = $(SRC_BONUS:.s=.o)
 
-FLAGS = -f macho64
+FLAGS = -f elf64
 
 NM = nasm
 

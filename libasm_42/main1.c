@@ -140,7 +140,7 @@ ssize_t		ft_read(int fd, void *buf, size_t nbyte);
 char		*ft_strdup(char *str);
 void		ft_list_push_front(t_list **begin_list, void *data);
 int			ft_list_size(t_list *begin_list);
-// void 	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
+void 		ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
 void		ft_list_sort2(t_list **begin_list, int (*cmp)());
 
 
@@ -228,11 +228,11 @@ int main()
 	list->next->next = ft_new_list(strdup("c"));
 	list->next->next->next = ft_new_list(strdup("b"));
 	list->next->next->next->next = ft_new_list(strdup("a"));
-	//print_list(list);
+	print_list(list);
 	//ft_list_sort2(&list1, strcmp);
-	ft_list_sort1(&list1, strcmp);
 	printf("\n=================\n\n");
-	print_list(list1);
+	ft_list_remove_if(&list, strdup("e"), strcmp);
+	print_list(list);
 
 
 	// ==================== add back ========================

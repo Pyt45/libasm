@@ -109,6 +109,7 @@ void ft_list_remove_if1(t_list **begin_list, void *data_ref, int (*cmp)())
 	tmp = NULL;
 	current = *begin_list;
 	last = NULL;
+	puts("here");
 	while (current)
 	{
 		if ((*cmp)(current->data, data_ref) == 0)
@@ -126,6 +127,7 @@ void ft_list_remove_if1(t_list **begin_list, void *data_ref, int (*cmp)())
 			last = current;
 			current = current->next;
 		}
+			puts("1here");
 	}
 }
 
@@ -166,7 +168,7 @@ void	ft_list_sort1(t_list **begin_list, int (*cmp)())
 void		ft_list_push_front(t_list **begin_list, void *data);
 int			ft_list_size(t_list *begin_list);
 t_list		*ft_new_list(void	*data);
-// void 	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
+void 	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
 // void		ft_list_sort(t_list **begin_list, int (*cmp)());
 // int		ft_atoi_base(char *str, char *base);
 
@@ -216,19 +218,19 @@ int		ft_atoi_base(char *str, char *base)
 int main()
 {
 	t_list	*list;
-	t_list	*list1;
 	//printf("%lu\n", sizeof(t_list));
 
 	list = NULL;
-	list1 = NULL;
-	// list = ft_new_list1(strdup("AQLZIM"));
-	//list1 = ft_new_list(strdup("AYOUB"));
-	// list->next = ft_new_list1("AQLZIM1");
-	// list1->next = ft_new_list("AYOUB1");
-	//ft_list_push_front1(&list, strdup("A"));
-	ft_list_push_front(&list1, strdup("B"));
+	list = ft_new_list1(strdup("a"));
+	list->next = ft_new_list1(strdup("b"));
+	list->next->next = ft_new_list1(strdup("c"));
+	list->next->next->next = ft_new_list1(strdup("d"));
+	list->next->next->next->next = ft_new_list1(strdup("e"));
 	//print_list(list);
-	print_list(list1);
+	print_list(list);
+	printf("\n===========\n\n");
+	ft_list_remove_if(&list, strdup("e"), &strcmp);
+	print_list(list)
 	// ft_list_push_front1(&list1, strdup("d"));
 	// ft_list_push_front(&list, strdup("d"));
 	// print_list(list);
