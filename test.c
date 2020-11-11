@@ -1,78 +1,84 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
-typedef struct	s_list
+int 	main()
 {
-    void			*data;
-    struct s_list	*next;
-}				t_list;
 
-int		ft_list_size1(t_list *begin_list)
-{
-	int		len;
-	t_list	*tmp;
-
-	len = 0;
-	tmp = begin_list;
-	while (tmp)
-	{
-		len++;
-		tmp = tmp->next;
-	}
-	return (len);
 }
 
-void	ft_list_push_front(t_list **begin_list, void *data);
-int		ft_list_size(t_list *list);
-//void	ft_list_sort(t_list **begin_list, int (*cmp)());
-//void	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
+/* ; _ft_list_push_front:
+; 		; rdi = prior node* p
+;     	; rsi = value
+;     	push 			rbp
+; 		mov 			rbp, rsp
+; 		push 			r15
 
-int		cmp(void *s1, void *s2)
-{
-	size_t			i;
-	unsigned char	*b1;
-	unsigned char	*b2;
+; 		mov 			r15, rdi                    ; p
 
-	i = 0;
-	b1 = (unsigned char*)s1;
-	b2 = (unsigned char*)s2;
-	while (b1[i] || b2[i])
-	{
-		if (b1[i] != b2[i])
-			return (b1[i] - b2[i]);
-		i++;
-	}
-	return (0);
-}
+; 		mov 			rdi, rsi                    ; value
+; 		mov 			rsi, qword [r15 + 8]     ; p->next
+; 		call 			_new_node                   ; rax = new_node(...)
 
-int     main()
-{
-	t_list *list1;
-	t_list *list2;
-	t_list *list3;
-	t_list *list4;
+; 		mov 			qword [r15 + 8], rax     ; p->next = rax
 
-	list1 = malloc(sizeof(t_list));
-	list2 = malloc(sizeof(t_list));
-	list3 = malloc(sizeof(t_list));
-	list4 = malloc(sizeof(t_list));
-
-	list1->data = "helloss";
-	list2->data = "aaa";
-	list3->data = "bye";
-	list4->data = "new";
-	
-	list1->next = list2;
-	list2->next = list3;
-	list3->next = list4;
-	list4->next = NULL;
+; 		pop 			r15
+; 		pop 			rbp
+; 		ret
 
 
-	
-	printf("\nList Size: %d\n", ft_list_size(list1));
-	printf("\nList Size: %d\n", ft_list_size1(list1));
-    
-	//printf("Before :%s\n", list1->data);
-	//ft_list_push_front(&list1, list4);
-	//printf("After :%s\n", list1->data);
-}
+_ft_list_push_front:
+		;push				rdi
+		mov					r15, rdi
+		mov					rdi, rsi
+		call				_ft_new_list
+		mov					rdi, r15
+		mov					rax, rdi
+		ret
+
+		; ===========================================================
+		; push				rdi
+		; xor					rax, rax
+		; mov				r15, rdi ; rdi = *begin_list , rsi = void *data
+		; ; push			rdi
+		; mov				rdi, rsi
+		; cmp				rdi, 0
+		; je				_ft_new_list
+		;cmp					rdi, 0
+		;je					_ft_new_list
+		; push				rdi
+		; mov					rdi, 16
+		; call				_malloc
+		; pop					rdi
+		; cmp					rdi, 0
+		; je					_ft_new_list
+
+
+
+; _ft_new_list:
+; 		mov					qword [rax], rsi
+; 		mov					qword[rax + 8], 0
+; 		ret
+;     	; rdi = value
+;     	; rsi = next ptr
+; 		; push 			rbp
+; 		; mov 			rbp, rsp
+
+; 		push			rdi
+
+; 		;mov 			r15, rdi ; value
+; 		;mov 			r14, rsi ; next
+
+; 		mov 			rdi, 16
+; 		call 			_malloc
+; 		; rax = address of new node
+
+; 		; Populate node
+; 		;pop				rdi
+; 		mov 			qword [rax], rsi
+; 		mov 			qword [rax + 8],  0
+
+; 		; pop 			r14
+; 		; pop 			r15
+; 		; pop 			rbp
+; 		ret */

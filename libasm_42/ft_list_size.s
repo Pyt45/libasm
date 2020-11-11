@@ -1,21 +1,18 @@
-		global			ft_list_size
 		section			.text
+		global			_ft_list_size
 
-
-
-ft_list_size:
+_ft_list_size:
+		mov				r12, rdi
 		xor				rcx, rcx
-		cmp				rdi, byte 0
-		je				end
-		inc				rcx
 
 next:
-		mov				rdi, [rdi + 8]
-		cmp				rdi, byte 0
-		je				end
+		cmp				r12, 0
+		je				exit
 		inc				rcx
+		mov				r12, [r12 + 8]
 		jmp				next
 
-end:
+exit:
+		;mov				rdi, r12
 		mov				rax, rcx
 		ret

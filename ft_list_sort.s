@@ -1,85 +1,65 @@
-; section     .text
-; global      _test
+		section			.text
+		global			ft_list_sort
 
-; _test:
-;         xor         rax, rax
-;         xor         rcx, rcx
-;         mov         al, byte[rdi + rcx]
-;         cmp        al, 0
-;         jne         return
-;         jmp         return_1
+ft_list_sort:
+		; rdi = begin , rsi = (*cmp)()
+		push			r12
+		push			rbx
+		cmp				rdi, 0 ; !begin
+		je				end
+		mov				r12, [rdi]
+		cmp				rsi, 0 ; !cmp
+		je				return
+		jmp				cmp_head
 
-; return_1:
-;         mov         rax, 2
-;         ret
+loop_1:
+		mov				rcx, [rdi]
+		mov				rbx, [rcx + 8]
+		mov				[rdi], rbx ; (*begin) = (*begin)->next
 
+cmp_head:
+		cmp				qword [rdi], 0 ; !(*begin)
+		je				return
+		mov				rcx, [rdi]
+		mov				rbx, [rcx + 8] ; tmp = (*begin)->next
 
-; return:
-;         xor         rax, rax
-;         ret
+loop_2:
+		cmp				rbx, 0 ; !(tmp)
+		je				loop_1
 
-            section             .text
-            global              _ft_list_sort2
+; ================================= loop end     ================================= 
+; ================================= cmp and loop ================================= 		
 
-_ft_list_sort2:
-            ; rdi = *begin_lis , rsi = int (*cmp())
-			push				rbx
-            push                r12
-            cmp                 rdi, 0 ; !begin
-            jz                  end
-            mov                 r12, [rdi] ; head = *begin_list
-            cmp                 rsi, 0		; cmp == NULL
-            jz                  return
-			jmp					comp_1
+cmp_main:
+		push			rsi
+		push			rdi
+		mov				rax, rsi
+		mov				rcx, [rdi]
+		mov				rdi, [rcx]
+		mov				rsi, [rbx]
+		call			rax
+		pop				rdi
+		pop				rsi
+		cmp				rax, 0
+		jg				swap_data
 
-increment_loop:
-			mov					rcx, [rdi]
-			mov					rbx, [rcx + 8]
-			mov					[rdi], rbx ; *begin = (*begin)->next
-
-comp_1:
-			cmp					QWORD [rdi], 0 ; !(*begin)
-			jz					return
-			mov					rcx, [rdi]
-			mov					rbx, [rcx + 8]; current = (*begin)->next
-
-comp_2:
-			cmp					rbx, 0 ; !current
-			jz					increment_loop 
-
-; ============================== end =================================
-; ============================== start ===============================
-
-compare:
-			push				rdi
-			push				rsi
-			mov					rax, rsi
-			mov					rcx, [rdi]
-			mov					rdi, [rcx] ; rdi = (*begin)->data
-			mov					rsi, [rbx]  ; rsi = current->data
-			call				rax
-			pop					rsi
-			pop					rdi
-			cmp					rax, 0 ; cmp > 0
-			jg					swap_data
-
-increment_main:
-			mov					rcx, [rbx + 8]
-			mov					rbx, rcx ; current = curent->next
-			jmp					comp_2
-
+increment:
+		mov				rcx, [rbx + 8]
+		mov				rbx, rcx ; tmp = tmp->next
+		jmp				loop_2
+		
 swap_data:
-			mov					r8, [rdi]
-			mov					rcx, [r8] ; rcx = (*begin)->data
-			mov					rax, [rbx] ; rax = current->data
-			mov					[r8], rax  ; (*begin->data) = current->data
-			mov					[rbx], rcx ; current->data = (*begin)->data
-			jmp					increment_main
+		mov				r8,[rdi]
+		mov				rcx, [r8]  ; data_sort = (*begin)->data
+		mov				rax, [rbx] ; rax = tmp->data
+		mov				[r8], rax; (*begin)->data = tmp->data 
+		mov				[rbx], rcx; tmp->data = data_sort
+		jmp				increment
 
 return:
-			mov					[rdi], r12 ; *begin_list = head
+		mov				[rdi], r12
 
 end:
-            pop                 r12
-			pop					rbx
-            ret
+		pop				rbx
+		pop				r12
+		ret

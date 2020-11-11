@@ -1,20 +1,19 @@
-        global      _ft_strcpy
+        global      ft_strcpy
         section     .text
-    
-_ft_strcpy:
-        xor         rcx, rcx
-        jmp         cpy
+
+ft_strcpy:
+		xor			rcx, rcx
+		jmp			_ft_strcpy_loop
 
 increment:
-        inc         rcx
+		inc			rcx
 
-cpy:
-        mov         dl, byte[rsi + rcx]
-        mov         byte[rdi + rcx], dl
-        cmp         byte[rsi + rcx], 0
-        jne         increment
+_ft_strcpy_loop:
+		mov			dl, [rsi + rcx]
+		mov			[rdi + rcx], dl
+		cmp			byte [rsi + rcx], 0
+		jne			increment
 
 return:
-        mov          rax, rdi
-        ret
-        
+		mov			rax, rdi
+		ret

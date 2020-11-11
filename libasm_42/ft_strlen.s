@@ -2,11 +2,15 @@
         section     .text
 
 _ft_strlen:
-        mov         rax, -1
-        jmp         ft_strlen_loop
+		mov			rcx, -1
+		inc			rcx
 
-ft_strlen_loop:
-        inc         rax
-        cmp         byte[rdi + rax], 0
-        jne         ft_strlen_loop
-        ret
+_ft_strlen_loop:
+		cmp			byte [rdi + rcx], 0
+		je			return
+		inc			rcx
+		jmp			_ft_strlen_loop
+
+return:
+		mov			rax, rcx
+		ret

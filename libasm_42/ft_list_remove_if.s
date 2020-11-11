@@ -1,72 +1,78 @@
-            global          ft_list_remove_if
-            section         .text
-            extern          free
+        global			_ft_list_remove_if
+        section			.text
+    	extern			_free
 
-ft_list_remove_if:
-            ; rdi = **begin , rsi = *data_ref , rdx = int (*cmp())
-            push			r12
-			push			r9
-			push			rbx
-			mov				r12, [rdi] ; head = *begin
-			cmp				rdi, 0 ; !begin
-			je				end
-			cmp				rdx, 0 ; !cmp
-			je				end
-			;mov				r9, 0 ; tmp = NULL
-            xor                 r9, r9 ; tmp = NULL
-			;mov				rbx, 0 ; last = NULL
-            xor                 rbx, rbx ; last = NULL
-			jmp				big_loop
-
-increment_main:
-			mov				rbx, r12  ; last = *begin
-			mov				rcx, [rbx + 8]
-			mov				r12, rcx ; *begin = (*begin)->next
-
-big_loop:
-			cmp				qword r12, 0 ; !(*begin)
-			je				end
-			mov				rax, rdx
-			push			rdi
-			push			rsi
-			mov				rcx, r12
-			mov				rdi, [rcx] ; rdi = *begin->data
-			call			rax
-			pop				rsi ; rsi = data_ref
-			pop				rdi
-			cmp				rax, 0 ; cmp(*begin->data, data_ref)
-			je				remove_from_elt
-			jmp				increment_main
-
-do_else:
-            mov             rcx, [r12 + 8]
-            mov             [rbx + 8], rcx
-            jmp             free_elt
-
-do_if:
-            mov             [rdi], r12
-            jmp             free_elt      
-
-remove_from_elt:
-			mov             rcx, r12
-            sub             rcx, [rdi]
-            cmp             rcx, 0
-            je              do_if
-            jne             do_else
+_ft_list_remove_if:
+		push			r12 ; r12 = current = *begin ; r9 = last
+		push			rbx ; rbx = tmp = current
+		mov				r12, [rdi]
+		cmp				rdi, 0
+		je				end
+		xor				rbx, rbx
+		xor				r9, r9
+		cmp				rdx, 0
+		je				end
+		jmp				big_loop
 
 free_elt:
-            mov             r9, r12        ; tmp = current
-            mov             rcx, r12
-            mov             r12, [rcx + 8] ; current = current->next
-            push            rdi
-            mov             rdi, r9
-            call            free
-            pop             rdi
-            jmp             big_loop
+		mov				rbx, [rdi] ; tmp = current
+		mov				rcx, [rdi]
+		mov				r8, [rcx + 8]
+		mov				[rdi], r8 ; current = current->next
+		push			rdi
+		push			rsi
+		push			rdx
+		mov				rdi, rbx
+		call			_free
+		pop				rdx
+		pop				rsi
+		pop				rdi
+		jmp				big_loop
+
+
+give_it_add:
+		mov				rcx, [rdi] ; rcx = current
+		mov				rax, [rcx + 8] ; rax = current->next
+		mov				r12, rax ; *begin = current->next
+		jmp				free_elt
+
+remove_elt:
+		mov				rcx, r12 	; rcx = *begin
+		mov				r8, [rdi] 	; r8 = current
+		sub				r8, rcx
+		cmp				r8, 0 		; current == *begin
+		je				give_it_add
+		mov				rcx, [rdi] ; rcx = current
+		mov				rax, [rcx + 8] ; rax = current->next
+		mov				[r9 + 8], rax ; last->next = current->next
+		jmp				free_elt
+
+big_loop:
+		cmp				qword [rdi], 0 ; !(current)
+		je				end
+		mov				rcx, [rdi]
+		push			rdi
+		push			rsi
+		push			rdx
+		mov				rdi, [rcx] ; rdi = current->dara
+		call			rdx ; cmp(current->data, rsi = data_ref)
+		mov				rax, rdx
+		pop				rdx
+		pop				rsi
+		pop				rdi
+		cmp				rax, 0
+		jne				increment
+		jmp				remove_elt
+
+increment:
+		mov				r9, [rdi] ; last = current
+		mov				r8, [rdi]
+		mov				rcx, [r8 + 8]
+		mov				[rdi], rcx ; current = current->next
+		jmp				big_loop
 
 end:
-			;mov				[rdi], r12
-			pop				rbx
-			pop				r9
-			pop				r12
-			ret
+		mov				[rdi], r12
+		pop				rbx
+		pop				r12
+		ret

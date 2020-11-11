@@ -1,9 +1,7 @@
-		global			_ft_list_size
+		global			ft_list_size
 		section			.text
 
-
-
-_ft_list_size:
+ft_list_size:
 		xor				rcx, rcx
 		cmp				rdi, byte 0
 		je				end

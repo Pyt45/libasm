@@ -1,12 +1,12 @@
-        global      _ft_bzero
-        section     .text
-_ft_bzero:
-loop:
-        dec     rsi
-        cmp     rsi, 0
-        jl      return
-        mov     [rdi + rsi], byte 0
-        jmp     loop
+        global          ft_bzero
+        section         .text
 
-return:
+ft_bzero:
+        dec				rsi
+		cmp				rsi, 0
+		jl				exit
+		mov				byte [rdi + rsi], 0
+		jmp				ft_bzero
+
+exit:
         ret

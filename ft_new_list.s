@@ -1,12 +1,12 @@
-        global          _ft_new_list
+        global          ft_new_list
         section         .text
-        extern          _malloc
+        extern          malloc
 
-_ft_new_list:
+ft_new_list:
         xor             rax, rax
         push            rdi
         mov             rdi, 16
-        call            _malloc
+        call            malloc
         pop             rdi
         mov             qword [rax], rdi
         mov             qword[rax + 8], 0
