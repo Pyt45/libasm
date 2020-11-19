@@ -11,7 +11,6 @@ typedef struct 		s_list
 	struct s_list	*next;
 }					t_list;
 
-
 int		ft_isspace(int c)
 {
 	return (c == ' ' || c == '\t' || c == '\v'
@@ -22,29 +21,70 @@ int		find_char_base(char *base, char c)
 {
 	int		i;
 
+	i = -1;
+	while (base[++i])
+	{
+		if (base[i] == c)
+			return (i);
+	}
+	return (-1);
+}
+
+int		check_base(char *base)
+{
+	int		len;
+	int		i;
+
+	if ((len = (int)strlen(base)) <= 1)
+		return (0);
 	i = 0;
-	while (base[i] && base[i] != c)
+	while (i < len)
+	{
+		if (base[i] == '+' || base[i] == '-')
+			return (0);
+		if (base[i] <= 32 || base[i] > 126)
+			return (0);
+		if (find_char_base(base + i + 1, base[i]) >= 0)
+			return (0);
 		i++;
-	return (i);
+	}
+	return (len);
 }
 
 int		ft_atoi_base1(char *str, char *base)
 {
 	int		base_len;
+	int		index;
+	int		i;
 	int		num;
-	int		sign;
+	int		sign = 1;
 
 	num = 0;
+	// if (!(base_len = check_base(base)))
+	// 	return (0);
+	// while (ft_isspace(*str))
+	// 	str++;
+	// sign = (*str == '-') ? -1 : 1;
+	// str += (str[0] == '+' || sign < 0) ? 1 : 0;
+	// i = 0;
+	// while (str[i])
+	// {
+	// 	if (find_char_base(base, str[i]) < 0 && str[i - 1] != '-' 
+	// 	&& str[i] != '+')
+	// 		return (0);
+	// 	i++;
+	// }
 	base_len = strlen(base);
-	if (base_len < 2)
-		return (0);
-	sign = (*str == '-') ? 1 : 0;
-	str += (str[0] == '+' || str[0] == '-') ? 1 : 0;
-	while (ft_isspace(*str))
-		str++;
-	while (find_char_base(base, *str) < base_len)
-		num = (num * base_len) - find_char_base(base, *str++);
-	return (sign ? num : -num);
+	i = -1;
+	while (str[++i])
+	{
+		if ((index = find_char_base(base, str[i])) >= 0)
+		{
+			num = num * base_len + index;
+		}
+			//printf("%d\n", index);
+	}
+	return (sign * num);
 }
 
 t_list		*ft_new_list1(void	*data)
